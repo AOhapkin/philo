@@ -8,11 +8,11 @@ int	ft_isspace(int c)
 	return (0);
 }
 
-long	ft_atol(const char *str)
+int	ft_atoi(const char *str)
 {
-	long	result;
-	long	negative;
-	int		i;
+	unsigned long int	result;
+	int					negative;
+	size_t				i;
 
 	result = 0;
 	negative = 1;
@@ -29,6 +29,10 @@ long	ft_atol(const char *str)
 	{
 		result = result * 10 + (str[i] - '0');
 		i++;
+		if (result > 2147483647 && negative == 1)
+			return (-1);
+		else if (result > 2147483648 && negative == -1)
+			return (0);
 	}
-	return (result * negative);
+	return ((int)(result * negative));
 }

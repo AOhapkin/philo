@@ -23,7 +23,7 @@ typedef struct s_data
 	t_philo			*all_philos;
 }					t_data;
 
-long	ft_atol(const char *str);
+int	ft_atoi(const char *str);
 int		ft_isspace(int c);
 
 #endif

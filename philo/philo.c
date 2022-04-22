@@ -27,7 +27,7 @@ int	is_args_valid(int argc, char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		if (!is_only_digits(argv[i]) || !ft_atol(argv[i]))
+		if (!is_only_digits(argv[i]) || ft_atoi(argv[i]) <= 0)
 		{
 			printf("Arguments aren't valid\n");
 			return (1);
