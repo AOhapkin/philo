@@ -1,5 +1,9 @@
 #include "philo.h"
 
+int	init_simulation(int argc, char **argv, t_data *simulation)
+{
+	simulation->nbr_philo =
+
 int	is_only_digits(char *str)
 {
 	while (*str)
@@ -23,7 +27,7 @@ int	is_args_valid(int argc, char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		if (!is_only_digits(argv[i]))
+		if (!is_only_digits(argv[i]) || !ft_atol(argv[i]))
 		{
 			printf("Arguments aren't valid\n");
 			return (1);
@@ -39,6 +43,6 @@ int	main(int argc, char **argv)
 
 	if (!is_args_valid(argc, argv))
 		return (0);
-
+	if (!init_simulation(argc, argv, &simulation))
 	return (0);
 }
