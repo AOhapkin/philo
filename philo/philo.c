@@ -1,6 +1,44 @@
 #include "philo.h"
 
-void	ft_init_mutex(t_data *simulation)
+long	get_current_time(void)
+{
+	struct timeval	tv;
+	long			res;
+
+	gettimeofday(&tv, NULL);
+	res = 1000 * (size_t)tv.tv_sec + (size_t)tv.tv_usec / 1000;
+	return (res);
+}
+
+void init_philosophers(t_data *simulation)
+{
+	t_philo	*philosophers;
+	int 	i;
+
+	philosophers = malloc(sizeof(t_philo) * simulation->nbr_philo);
+	i = 0;
+	while (i < simulation->nbr_philo)
+	{
+		philosophers[i].philo_id = i;
+		philosophers[i].nbr_philo = simulation->nbr_philo;
+		philosophers[i].total_nbr_of_meals = 0;
+		philosophers[i].total_nbr_of_meals_1 = simulation->nbr_of_meals;
+		philosophers[i].time_to_eat = simulation->time_to_eat;
+		philosophers[i].time_to_sleep = simulation->time_to_sleep;
+		philosophers[i].time_to_die = simulation->time_to_die;
+		philosophers[i].time_of_last_meal = get_current_time();
+		philosophers[i].limit_of_life = simulation->time_to_die;
+		philosophers[i].stop = 0;
+		philosophers[i].l_f = \
+			&simulation->forks[philosophers[i].philo_id];
+		philosophers[i].r_f = \
+			&simulation->forks[(philosophers[i].philo_id + 1) % simulation->nbr_philo];
+		philosophers[i].arg = simulation;
+		i++;
+	}
+}
+
+void	init_mutex(t_data *simulation)
 {
 	int				philo_counter;
 	pthread_mutex_t	*mutex;
@@ -76,6 +114,7 @@ int	main(int argc, char **argv)
 		return (1);
 	if (!init_simulation(argc, argv, &simulation))
 		return (1);
-	ft_init_mutex(&simulation);
+	init_mutex(&simulation);
+	init_philosophers(&simulation);
 	return (0);
 }
