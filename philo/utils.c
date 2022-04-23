@@ -1,5 +1,16 @@
 #include "philo.h"
 
+int	is_only_digits(char *str)
+{
+	while (*str)
+	{
+		if (*str < '0' || *str > '9')
+			return (0);
+		str++;
+	}
+	return (1);
+}
+
 int	ft_isspace(int c)
 {
 	if (c == '\t' || c == '\n' || c == '\v'
@@ -55,4 +66,3 @@ long	get_current_time(void)
 	res = 1000 * (size_t)tv.tv_sec + (size_t)tv.tv_usec / 1000;
 	return (res);
 }
-
