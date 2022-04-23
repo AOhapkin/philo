@@ -8,6 +8,15 @@ int	ft_isspace(int c)
 	return (0);
 }
 
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+	{
+		return (1);
+	}
+	return (0);
+}
+
 int	ft_atoi(const char *str)
 {
 	unsigned long int	result;
@@ -36,3 +45,14 @@ int	ft_atoi(const char *str)
 	}
 	return ((int)(result * negative));
 }
+
+long	get_current_time(void)
+{
+	struct timeval	tv;
+	long			res;
+
+	gettimeofday(&tv, NULL);
+	res = 1000 * (size_t)tv.tv_sec + (size_t)tv.tv_usec / 1000;
+	return (res);
+}
+
