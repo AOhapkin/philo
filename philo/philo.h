@@ -44,5 +44,6 @@ typedef struct s_data
 
 int	ft_atoi(const char *str);
 int		ft_isspace(int c);
+long	get_current_time(void);
 
 #endif

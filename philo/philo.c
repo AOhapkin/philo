@@ -1,5 +1,48 @@
 #include "philo.h"
 
+void	*init_philo_process(void *philosopher)
+{
+	t_philo		*philo;
+
+	philo = (t_philo *)philosopher;
+	philo->time_of_last_meal = get_current_time();
+	philo->start_time = get_current_time();
+	while (!philo->arg->dead)
+	{
+		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+			return (NULL);
+		taking_forks(philo);
+		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+			return (NULL);
+		eating(philo);
+		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+			return (NULL);
+		sleeping(philo);
+		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+			return (NULL);
+		thinking(philo);
+		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+			return (NULL);
+	}
+	return (NULL);
+}
+
+void	init_threads(t_data *simulation)
+{
+	int			i;
+	pthread_t	*threads;
+	pthread_t	s_tid;
+
+	i = simulation->nbr_philo;
+	threads = malloc(sizeof(pthread_t) * i);
+	while (i--)
+		pthread_create(&threads[i], \
+            NULL, init_philo_process, (void *) &simulation->philosofers[i]);
+	pthread_create(&s_tid, NULL, ft_galina_monitor, (void *)simulation->philosofers);
+	pthread_join(s_tid, NULL);
+	simulation->tids = threads;
+}
+
 long	get_current_time(void)
 {
 	struct timeval	tv;
@@ -116,5 +159,6 @@ int	main(int argc, char **argv)
 		return (1);
 	init_mutex(&simulation);
 	init_philosophers(&simulation);
+	init_threads(&simulation);
 	return (0);
 }
