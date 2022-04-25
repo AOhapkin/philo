@@ -2,26 +2,94 @@
 
 void	*init_philo_process(void *philosopher)
 {
-	t_philo		*philo;
+	t_philo		*temp_p;
 
-	philo = (t_philo *)philosopher;
-	philo->time_of_last_meal = get_current_time();
-	philo->start_time = get_current_time();
-	while (!philo->arg->dead)
+	temp_p = (t_philo *)philosopher;
+	temp_p->time_of_last_meal = get_current_time();
+	temp_p->start_time = get_current_time();
+	while (!temp_p->arg->dead)
 	{
-		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+		if (temp_p->arg->dead || temp_p->stop || is_enough_meals(temp_p))
 			return (NULL);
-		taking_forks(philo);
-		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+		taking_forks(temp_p);
+		if (temp_p->arg->dead || temp_p->stop || is_enough_meals(temp_p))
 			return (NULL);
-		eating(philo);
-		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+		eating(temp_p);
+		if (temp_p->arg->dead || temp_p->stop || is_enough_meals(temp_p))
 			return (NULL);
-		sleeping(philo);
-		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+		sleeping(temp_p);
+		if (temp_p->arg->dead || temp_p->stop || is_enough_meals(temp_p))
 			return (NULL);
-		thinking(philo);
-		if (philo->arg->dead || philo->stop || ft_cnt_of_meals(philo))
+		thinking(temp_p);
+		if (temp_p->arg->dead || temp_p->stop || is_enough_meals(temp_p))
+			return (NULL);
+	}
+	return (NULL);
+}
+
+void	set_death_and_stop(t_philo *philo, int i)
+{
+	philo->arg->dead = 1;
+	pthread_mutex_lock(&philo->lock_print);
+	printf("%ld %d died\n", get_current_time() - philo->start_time,
+		   philo[i].philo_id + 1);
+	i = -1;
+	while (i < philo[i].nbr_philo)
+	{
+		philo[i].stop = 1;
+		i++;
+	}
+}
+
+int	is_enough_meals(t_philo *philo)
+{
+	int	flag_stop_eating;
+	int	i;
+
+	if (philo->total_nbr_of_meals != -1 \
+		&& philo->total_nbr_of_meals_1 > 0)
+	{
+		flag_stop_eating = 1;
+		i = -1;
+		while (++i < philo->nbr_philo)
+			if (philo[i].total_nbr_of_meals < philo->total_nbr_of_meals_1)
+				flag_stop_eating = 0;
+		if (flag_stop_eating == 1)
+		{
+			i = -1;
+			while (i < philo[i].nbr_philo)
+			{
+				philo[i].stop = 1;
+				i++;
+			}
+			return (1);
+		}
+	}
+	return (0);
+}
+
+void	*check_philosophers(void *args)
+{
+	t_philo	*philos;
+	long	current_time;
+	int		i;
+
+	philos = (t_philo *)args;
+	i = 0;
+	while (philos[i].stop == 0)
+	{
+		i = -1;
+		while (++i < philos->nbr_philo)
+		{
+			current_time = get_current_time();
+			if (current_time - philos[i].time_of_last_meal > philos[i].limit_of_life)
+			{
+				set_death_and_stop(philos, i);
+				pthread_mutex_unlock(&philos->lock_print);
+				return (NULL);
+			}
+		}
+		if (is_enough_meals(philos) || philos->stop)
 			return (NULL);
 	}
 	return (NULL);
@@ -38,19 +106,10 @@ void	init_threads(t_data *simulation)
 	while (i--)
 		pthread_create(&threads[i], \
             NULL, init_philo_process, (void *) &simulation->philosofers[i]);
-	pthread_create(&s_tid, NULL, ft_galina_monitor, (void *)simulation->philosofers);
+	pthread_create(&s_tid, NULL, check_philosophers,
+				   (void *) simulation->philosofers);
 	pthread_join(s_tid, NULL);
 	simulation->tids = threads;
-}
-
-long	get_current_time(void)
-{
-	struct timeval	tv;
-	long			res;
-
-	gettimeofday(&tv, NULL);
-	res = 1000 * (size_t)tv.tv_sec + (size_t)tv.tv_usec / 1000;
-	return (res);
 }
 
 void init_philosophers(t_data *simulation)
@@ -79,74 +138,20 @@ void init_philosophers(t_data *simulation)
 		philosophers[i].arg = simulation;
 		i++;
 	}
+	simulation->philosofers = philosophers;
 }
 
 void	init_mutex(t_data *simulation)
 {
-	int				philo_counter;
+	int				counter;
 	pthread_mutex_t	*mutex;
 
-	philo_counter = simulation->nbr_philo;
-	mutex = malloc(sizeof(pthread_mutex_t) * philo_counter);
-	while (philo_counter--)
-		pthread_mutex_init(&mutex[philo_counter], NULL);
+	counter = simulation->nbr_philo;
+	mutex = malloc(sizeof(pthread_mutex_t) * counter);
+	while (counter--)
+		pthread_mutex_init(&mutex[counter], NULL);
 	pthread_mutex_init(&simulation->lock_print, NULL);
 	simulation->forks = mutex;
-}
-
-int	init_simulation(int argc, char **argv, t_data *simulation)
-{
-	simulation->nbr_philo = ft_atoi(argv[1]);
-	simulation->time_to_die = ft_atoi(argv[2]);
-	simulation->time_to_eat = ft_atoi(argv[3]);
-	simulation->time_to_sleep = ft_atoi(argv[4]);
-	simulation->dead = 0;
-	if (argc == 5)
-	{
-		if (simulation->nbr_philo < 1)
-			return (0);
-		simulation->nbr_of_meals = -1;
-	}
-	if (argc == 6)
-	{
-		simulation->nbr_of_meals = ft_atoi(argv[5]);
-		if (simulation->nbr_of_meals < 1)
-			return (0);
-	}
-	return (1);
-}
-
-int	is_only_digits(char *str)
-{
-	while (*str)
-	{
-		if (*str < '0' || *str > '9')
-			return (0);
-		str++;
-	}
-	return (1);
-}
-
-int	is_args_valid(int argc, char **argv)
-{
-	int	i;
-
-	if (argc != 5 && argc != 6)
-	{
-		printf("Error!\nSimulation need 4 or 5 arguments");
-		return (1);
-	}
-	i = 1;
-	while (argv[i])
-	{
-		if (!is_only_digits(argv[i]) || ft_atoi(argv[i]) <= 0)
-		{
-			printf("Arguments aren't valid\n");
-			return (1);
-		}
-		i++;
-	}
-	return (0);
 }
 
 int	main(int argc, char **argv)
