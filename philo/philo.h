@@ -8,6 +8,9 @@
 # include <pthread.h>
 # include <sys/time.h>
 
+# define SUCCESS	1
+# define FAIL		0
+
 typedef struct s_philo
 {
 	int				philo_id;
@@ -24,7 +27,7 @@ typedef struct s_philo
 	pthread_mutex_t	lock_print;
 	pthread_mutex_t	*l_f;
 	pthread_mutex_t	*r_f;
-	struct s_arg	*arg;
+	struct s_data	*arg;
 }					t_philo;
 
 typedef struct s_data
@@ -42,8 +45,13 @@ typedef struct s_data
 	t_philo			*philosofers;
 }					t_data;
 
-int	ft_atoi(const char *str);
+int		ft_atoi(const char *str);
 int		ft_isspace(int c);
 long	get_current_time(void);
+int		is_only_digits(char *str);
+int		is_args_valid(int argc, char **argv);
+int		init_simulation(int argc, char **argv, t_data *simulation);
+void 	init_philosophers(t_data *simulation);
+int		is_enough_meals(t_philo *philo);
 
 #endif
