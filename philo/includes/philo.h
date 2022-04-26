@@ -8,8 +8,8 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-# define SUCCESS	1
-# define FAIL		0
+# define FT_SUCCESS	1
+# define FT_ERROR	0
 
 typedef struct s_philo
 {
@@ -42,7 +42,6 @@ int			init(t_info *info, int argc, char *argv[]);
 void		*philo(void *argv);
 void		*monitor(void *argv);
 void		*monitor_each_must_eat(void *argv);
-int			ft_strlen(char *str);
 int			ft_atoi(const char *nptr);
 int			ft_puterror(char *str);
 int			ft_malloc(void *dst, size_t size);
