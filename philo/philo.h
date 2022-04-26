@@ -13,45 +13,40 @@
 
 typedef struct s_philo
 {
-	int				philo_id;
-	int				total_nbr_of_meals;
-	int				total_nbr_of_meals_1;
-	time_t			time_of_last_meal;
-	int				nbr_philo;
-	int				time_to_eat;
-	int				time_to_die;
-	int				time_to_sleep;
-	time_t			limit_of_life;
-	int				stop;
-	time_t			start_time;
-	pthread_mutex_t	lock_print;
-	pthread_mutex_t	*l_f;
-	pthread_mutex_t	*r_f;
-	struct s_data	*arg;
+	int				n;
+	int				num_of_eat;
+	pthread_mutex_t	*left;
+	pthread_mutex_t	*right;
+	pthread_mutex_t	check_mutex;
+	pthread_t		thread;
+	struct s_info	*info;
+	struct timeval	last_time_to_eat;
 }					t_philo;
 
-typedef struct s_data
+typedef struct s_info
 {
-	int				nbr_philo;
-	time_t			start_time;
+	int				num_of_philo;
+	int				num_of_eat_finish_philo;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	int				dead;
-	int				nbr_of_meals;
+	int				num_of_must_eat;
+	int				finish;
+	pthread_mutex_t	finish_mutex;
+	t_philo			*philos;
 	pthread_mutex_t	*forks;
-	pthread_t		*tids;
-	pthread_mutex_t	lock_print;
-	t_philo			*philosofers;
-}					t_data;
+	struct timeval	create_at;
+}					t_info;
 
-int		ft_atoi(const char *str);
-int		ft_isspace(int c);
-long	get_current_time(void);
-int		is_only_digits(char *str);
-int		is_args_valid(int argc, char **argv);
-int		init_simulation(int argc, char **argv, t_data *simulation);
-void 	init_philosophers(t_data *simulation);
-int		is_enough_meals(t_philo *philo);
+int			init(t_info *info, int argc, char *argv[]);
+void		*philo(void *argv);
+void		*monitor(void *argv);
+void		*monitor_each_must_eat(void *argv);
+int			ft_strlen(char *str);
+int			ft_atoi(const char *nptr);
+int			ft_puterror(char *str);
+int			ft_malloc(void *dst, size_t size);
+long long	time_to_ms(struct timeval now);
+void		print_philo_msg(t_philo *philo, char *str);
 
 #endif
