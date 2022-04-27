@@ -13,15 +13,15 @@ static void	parsing_arg(t_info *info, int argc, char *argv[])
 static int	check_info(t_info *info, int argc)
 {
 	if (argc == 6 && info->num_of_must_eat <= 0)
-		return (show_error_message("ERROR: wrong num of must eat\n"));
+		return (show_error_message("Error: wrong number of meals\n"));
 	if (info->num_of_philo < 0)
-		return (show_error_message("ERROR: wrong num of philo\n"));
+		return (show_error_message("Error: wrong number of philosofers\n"));
 	if (info->time_to_die < 0)
-		return (show_error_message("ERROR: wrong time to die\n"));
+		return (show_error_message("Error: wrong time to die\n"));
 	if (info->time_to_eat < 0)
-		return (show_error_message("ERROR: wrong time to eat\n"));
+		return (show_error_message("Error: wrong time to eat\n"));
 	if (info->time_to_sleep < 0)
-		return (show_error_message("ERROR: wrong time to sleep\n"));
+		return (show_error_message("Error: wrong time to sleep\n"));
 	return (SUCCESS);
 }
 
@@ -32,7 +32,7 @@ static int	init_philos(t_info *info)
 	pthread_mutex_init(&info->finish_mutex, NULL);
 	if (ft_malloc_memset(&info->philos, sizeof(t_philo) * info->num_of_philo) || \
 		ft_malloc_memset(&info->forks, sizeof(pthread_mutex_t) * info->num_of_philo))
-		return (show_error_message("ERROR: malloc failed\n"));
+		return (show_error_message("Error: malloc error\n"));
 	i = 0;
 	while (i < info->num_of_philo)
 	{
