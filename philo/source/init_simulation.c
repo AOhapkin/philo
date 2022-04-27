@@ -1,5 +1,14 @@
 #include "philo.h"
 
+int	ft_malloc(void *dst, size_t size)
+{
+	*(void **)dst = malloc(size);
+	if (*(void **)dst == NULL)
+		return (FAIL);
+	memset(*(void **)dst, 0, size);
+	return (SUCCESS);
+}
+
 static void	parsing_arg(t_info *info, int argc, char *argv[])
 {
 	info->num_of_philo = ft_atoi(argv[1]);
@@ -30,8 +39,8 @@ static int	init_philos(t_info *info)
 	int		i;
 
 	pthread_mutex_init(&info->finish_mutex, NULL);
-	if (ft_malloc_memset(&info->philos, sizeof(t_philo) * info->num_of_philo) || \
-		ft_malloc_memset(&info->forks, sizeof(pthread_mutex_t) * info->num_of_philo))
+	if (ft_malloc(&info->philos, sizeof(t_philo) * info->num_of_philo) || \
+		ft_malloc(&info->forks, sizeof(pthread_mutex_t) * info->num_of_philo))
 		return (show_error_message("Error: malloc error\n"));
 	i = 0;
 	while (i < info->num_of_philo)

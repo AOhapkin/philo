@@ -9,19 +9,6 @@ long long	time_to_ms(struct timeval now)
 	return (ms);
 }
 
-void	show_philo_message(t_philo *philo, char *str)
-{
-	long long		ms;
-	struct timeval	now;
-
-	pthread_mutex_lock(&philo->info->finish_mutex);
-	gettimeofday(&now, NULL);
-	ms = time_to_ms(now) - time_to_ms(philo->info->create_at);
-	if (!philo->info->finish)
-		printf("%lld\t%d\t %s\n", ms, philo->n + 1, str);
-	pthread_mutex_unlock(&philo->info->finish_mutex);
-}
-
 int	show_error_message(char *message)
 {
 	char	*s;
@@ -79,13 +66,4 @@ int	ft_atoi(const char *str)
 			return (0);
 	}
 	return ((int)(result * negative));
-}
-
-int	ft_malloc_memset(void *dst, size_t size)
-{
-	*(void **)dst = malloc(size);
-	if (*(void **)dst == NULL)
-		return (FAIL);
-	memset(*(void **)dst, 0, size);
-	return (SUCCESS);
 }

@@ -44,7 +44,7 @@ void		*monitor(void *argv);
 void		*monitor_each_must_eat(void *argv);
 int			ft_atoi(const char *nptr);
 int			show_error_message(char *message);
-int			ft_malloc_memset(void *dst, size_t size);
+int			ft_malloc(void *dst, size_t size);
 long long	time_to_ms(struct timeval now);
 void		show_philo_message(t_philo *philo, char *str);
 
