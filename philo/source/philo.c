@@ -46,7 +46,7 @@ int	main(int argc, char *argv[])
 
 	memset(&info, 0, sizeof(info));
 	if (argc != 5 && argc != 6)
-		return (ft_puterror("ERROR: wrong argc\n"));
+		return (show_error_message("ERROR: wrong argc\n"));
 	if (init(&info, argc, argv))
 		return (1);
 	create_philos(&info);

@@ -43,7 +43,7 @@ void		*philo(void *argv);
 void		*monitor(void *argv);
 void		*monitor_each_must_eat(void *argv);
 int			ft_atoi(const char *nptr);
-int			ft_puterror(char *str);
+int			show_error_message(char *message);
 int			ft_malloc(void *dst, size_t size);
 long long	time_to_ms(struct timeval now);
 void		print_philo_msg(t_philo *philo, char *str);

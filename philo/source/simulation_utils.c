@@ -22,16 +22,16 @@ void	print_philo_msg(t_philo *philo, char *str)
 	pthread_mutex_unlock(&philo->info->finish_mutex);
 }
 
-int	ft_puterror(char *str)
+int	show_error_message(char *message)
 {
 	char	*s;
 	int		i;
 
-	s = str;
+	s = message;
 	i = 0;
 	while (*s++)
 		i++;
-	write(2, str, i);
+	write(2, message, i);
 	return (FAIL);
 }
 
