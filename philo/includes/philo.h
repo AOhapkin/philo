@@ -8,8 +8,8 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-# define FT_SUCCESS	1
-# define FT_ERROR	0
+# define SUCCESS	0
+# define FAIL	1
 
 typedef struct s_philo
 {

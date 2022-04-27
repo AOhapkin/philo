@@ -22,7 +22,7 @@ static int	check_info(t_info *info, int argc)
 		return (ft_puterror("ERROR: wrong time to eat\n"));
 	if (info->time_to_sleep < 0)
 		return (ft_puterror("ERROR: wrong time to sleep\n"));
-	return (FT_SUCCESS);
+	return (SUCCESS);
 }
 
 static int	init_philos(t_info *info)
@@ -47,15 +47,15 @@ static int	init_philos(t_info *info)
 		info->philos[i].info = info;
 		++i;
 	}
-	return (FT_SUCCESS);
+	return (SUCCESS);
 }
 
 int	init(t_info *info, int argc, char *argv[])
 {
 	parsing_arg(info, argc, argv);
 	if (check_info(info, argc))
-		return (FT_ERROR);
+		return (FAIL);
 	if (init_philos(info))
-		return (FT_ERROR);
-	return (FT_SUCCESS);
+		return (FAIL);
+	return (SUCCESS);
 }

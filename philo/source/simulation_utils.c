@@ -32,7 +32,7 @@ int	ft_puterror(char *str)
 	while (*s++)
 		i++;
 	write(2, str, i);
-	return (FT_ERROR);
+	return (FAIL);
 }
 
 int	ft_atoi(const char *nptr)
@@ -56,7 +56,7 @@ int	ft_malloc(void *dst, size_t size)
 {
 	*(void **)dst = malloc(size);
 	if (*(void **)dst == NULL)
-		return (FT_ERROR);
+		return (FAIL);
 	memset(*(void **)dst, 0, size);
-	return (FT_SUCCESS);
+	return (SUCCESS);
 }
