@@ -9,7 +9,7 @@ long long	time_to_ms(struct timeval now)
 	return (ms);
 }
 
-void	print_philo_msg(t_philo *philo, char *str)
+void	show_philo_message(t_philo *philo, char *str)
 {
 	long long		ms;
 	struct timeval	now;
@@ -74,7 +74,7 @@ int	ft_atoi(const char *str)
 		result = result * 10 + (str[i] - '0');
 		i++;
 		if (result > 2147483647 && negative == 1)
-			return (-1);
+			return (0);
 		else if (result > 2147483648 && negative == -1)
 			return (0);
 	}

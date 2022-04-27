@@ -46,6 +46,6 @@ int			ft_atoi(const char *nptr);
 int			show_error_message(char *message);
 int			ft_malloc_memset(void *dst, size_t size);
 long long	time_to_ms(struct timeval now);
-void		print_philo_msg(t_philo *philo, char *str);
+void		show_philo_message(t_philo *philo, char *str);
 
 #endif

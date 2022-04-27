@@ -3,9 +3,9 @@
 static void	pickup_fork(t_philo *philo)
 {
 	pthread_mutex_lock(philo->right);
-	print_philo_msg(philo, "has taken a fork");
+	show_philo_message(philo, "has taken a fork");
 	pthread_mutex_lock(philo->left);
-	print_philo_msg(philo, "has taken a fork");
+	show_philo_message(philo, "has taken a fork");
 }
 
 static void	eating(t_philo *philo)
@@ -31,13 +31,13 @@ static void	eating(t_philo *philo)
 
 static void	sleeping(t_philo *philo)
 {
-	print_philo_msg(philo, "is sleeping");
+	show_philo_message(philo, "is sleeping");
 	usleep(philo->info->time_to_sleep * 1000);
 }
 
 static void	thinking(t_philo *philo)
 {
-	print_philo_msg(philo, "is thinking");
+	show_philo_message(philo, "is thinking");
 }
 
 void	*philo(void *argv)
