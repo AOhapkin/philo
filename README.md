@@ -63,3 +63,39 @@
 - [ ] Тестовые значения `5 800 200 200 7`: никто не должен умирать, симуляция остановится, когда каждый философ поест минимум 7 раз.
 - [ ] Тестовые значения `4 410 200 200`: никто не должен умереть.
 - [ ] Тестовые значения `4 310 200 100`: философ умрет.
+
+## Используемые функции
+
+### `int usleep(useconds_t usec);`
+
+Приостанавливает выполнение вызванного потока (как минимум) на `usec` микросекунд. Функция возвращает 0 в случае успеха. При ошибке `-1` и устанавливает нужное значение в errno.
+
+### `int gettimeofday(struct timeval *restrict tv, struct timezone *restrict tz);`
+
+Функции `gettimeofday()` и `settimeofday()` могут получать и устанавливать время, а также часовой пояс. 
+Аргумент `tv` является структурой `struct timeval` (определена в `<sys/time.h>`).
+
+    struct timeval {
+        time_t      tv_sec;     /* seconds */
+        suseconds_t tv_usec;    /* microseconds */
+    };
+
+Аргумент `tz` - это `struct timezone`. Использование tz устарело, поэтому указывают NULL.
+
+    struct timezone {
+      int tz_minuteswest;     /* minutes west of Greenwich */
+      int tz_dsttime;         /* type of DST correction */
+    };
+
+Функция возвращает 0 в случае успеха. При ошибке `-1` и устанавливает нужное значение в errno.
+
+### `int pthread_create(*ptherad_t, const pthread_attr_t *attr, void* (*start_routine)(void*), void *arg);`
+
+Функция `pthread_create()` запускает новый поток внутри потока. 
+- Первый аргумент - это указатель на переменную типа pthread_t, в которую (при успехе) записывается id потока.
+- Аргумент `pthread_attr_t` - атрибут потока (по умолчанию NULL).
+- Аргумент `start_routin` - это функция, которая будет выполняться в новом потоке.
+- `arg` - аргумент функции `start_routin`
+
+### `int pthread_detach(pthread_t thread);`
+
