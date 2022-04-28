@@ -10,7 +10,7 @@ SRCS = $(addprefix $(DIR_S),$(C_FILES))
 OBJS = $(addprefix $(DIR_O),$(C_FILES:.c=.o))
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 .PHONY: all NAME clean fclean re
 
