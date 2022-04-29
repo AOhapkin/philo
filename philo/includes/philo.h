@@ -38,7 +38,7 @@ typedef struct s_info
 	struct timeval	create_at;
 }					t_info;
 
-int			init(t_info *info, int argc, char *argv[]);
+int			init_simulation(t_info *info, int argc, char *argv[]);
 void		*philo(void *argv);
 void		*monitor(void *argv);
 void		*monitor_each_must_eat(void *argv);

@@ -1,6 +1,6 @@
 #include "philo.h"
 
-void	show_philo_message(t_philo *philo, char *str)
+void	show_philo_message(t_philo *philo, char *message)
 {
 	long long		ms;
 	struct timeval	now;
@@ -9,11 +9,11 @@ void	show_philo_message(t_philo *philo, char *str)
 	gettimeofday(&now, NULL);
 	ms = time_to_ms(now) - time_to_ms(philo->info->create_at);
 	if (!philo->info->finish)
-		printf("%lld\t%d\t %s\n", ms, philo->n + 1, str);
+		printf("%lld\t%d\t %s\n", ms, philo->n + 1, message);
 	pthread_mutex_unlock(&philo->info->finish_mutex);
 }
 
-static void	join_and_free_philos(t_info *info)
+static void	join_and_destroy_philos(t_info *info)
 {
 	int		i;
 
@@ -53,16 +53,16 @@ static void	create_philos(t_info *info)
 	}
 }
 
-int	main(int argc, char *argv[])
+int	main(int argc, char **argv)
 {
 	t_info	info;
 
 	if (argc != 5 && argc != 6)
 		return (show_error_message("Error: wrong arguments\n"));
 	memset(&info, 0, sizeof(info));
-	if (init(&info, argc, argv))
+	if (init_simulation(&info, argc, argv))
 		return (1);
 	create_philos(&info);
-	join_and_free_philos(&info);
+	join_and_destroy_philos(&info);
 	return (0);
 }

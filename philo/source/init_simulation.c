@@ -9,7 +9,7 @@ int	ft_malloc(void *dst, size_t size)
 	return (SUCCESS);
 }
 
-static void	parsing_arg(t_info *info, int argc, char *argv[])
+static void	parse_arguments(t_info *info, int argc, char *argv[])
 {
 	info->num_of_philo = ft_atoi(argv[1]);
 	info->time_to_die = ft_atoi(argv[2]);
@@ -19,7 +19,7 @@ static void	parsing_arg(t_info *info, int argc, char *argv[])
 		info->num_of_must_eat = ft_atoi(argv[5]);
 }
 
-static int	check_info(t_info *info, int argc)
+static int	validate_info(t_info *info, int argc)
 {
 	if (argc == 6 && info->num_of_must_eat <= 0)
 		return (show_error_message("Error: wrong number of meals\n"));
@@ -34,7 +34,7 @@ static int	check_info(t_info *info, int argc)
 	return (SUCCESS);
 }
 
-static int	init_philos(t_info *info)
+static int	init_mutexes(t_info *info)
 {
 	int		i;
 
@@ -54,17 +54,17 @@ static int	init_philos(t_info *info)
 			info->philos[i].left = &info->forks[i - 1];
 		info->philos[i].right = &info->forks[i];
 		info->philos[i].info = info;
-		++i;
+		i++;
 	}
 	return (SUCCESS);
 }
 
-int	init(t_info *info, int argc, char *argv[])
+int	init_simulation(t_info *info, int argc, char **argv)
 {
-	parsing_arg(info, argc, argv);
-	if (check_info(info, argc))
+	parse_arguments(info, argc, argv);
+	if (validate_info(info, argc))
 		return (FAIL);
-	if (init_philos(info))
+	if (init_mutexes(info))
 		return (FAIL);
 	return (SUCCESS);
 }
