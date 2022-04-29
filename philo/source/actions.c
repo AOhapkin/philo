@@ -40,7 +40,7 @@ static void	thinking(t_philo *philo)
 	show_philo_message(philo, "is thinking");
 }
 
-void	*philo(void *argv)
+void	*run_philo_actions(void *argv)
 {
 	t_philo	*philo;
 

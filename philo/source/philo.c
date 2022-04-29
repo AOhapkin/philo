@@ -41,10 +41,10 @@ static void	create_philos(t_info *info)
 	{
 		info->philos[i].last_time_to_eat = info->create_at;
 		pthread_create(&info->philos[i].thread, NULL, \
-			philo, &info->philos[i]);
+			run_philo_actions, &info->philos[i]);
 		pthread_create(&thread, NULL, monitor, &info->philos[i]);
 		pthread_detach(thread);
-		++i;
+		i++;
 	}
 	if (info->num_of_must_eat != 0)
 	{

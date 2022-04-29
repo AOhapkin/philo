@@ -9,7 +9,7 @@
 # include <sys/time.h>
 
 # define SUCCESS	0
-# define FAIL	1
+# define FAIL		1
 
 typedef struct s_philo
 {
@@ -39,7 +39,7 @@ typedef struct s_info
 }					t_info;
 
 int			init_simulation(t_info *info, int argc, char *argv[]);
-void		*philo(void *argv);
+void		*run_philo_actions(void *argv);
 void		*monitor(void *argv);
 void		*monitor_each_must_eat(void *argv);
 int			ft_atoi(const char *nptr);
