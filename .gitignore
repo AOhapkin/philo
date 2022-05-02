@@ -4,6 +4,7 @@
 /objs
 *.o
 /cmake*
+/.idea
 
 # Prerequisites
 *.d
