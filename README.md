@@ -80,7 +80,7 @@
         suseconds_t tv_usec;    /* microseconds */
     };
 
-Аргумент `tz` - это `struct timezone`. Использование tz устарело, поэтому указывают NULL.
+Аргумент `tz` - это `struct timezone`. Использование tz устарело, поэтому обычно указывают NULL.
 
     struct timezone {
       int tz_minuteswest;     /* minutes west of Greenwich */
