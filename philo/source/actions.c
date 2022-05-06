@@ -61,10 +61,13 @@ void	*run_philo_actions(void *argv)
 		usleep(philo->info->time_to_eat * 1000);
 	while (!philo->info->finish)
 	{
-		pickup_fork(philo);
-		eating(philo);
-		sleeping(philo);
-		thinking(philo);
+		if (philo->info->num_of_philo > 1)
+		{
+			pickup_fork(philo);
+			eating(philo);
+			sleeping(philo);
+			thinking(philo);
+		}
 	}
 	return (NULL);
 }
