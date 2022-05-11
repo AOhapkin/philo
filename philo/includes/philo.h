@@ -6,7 +6,7 @@
 /*   By: gmyriah <gmyriah@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/01 09:36:19 by gmyriah           #+#    #+#             */
-/*   Updated: 2022/05/11 16:57:04 by gmyriah          ###   ########.fr       */
+/*   Updated: 2022/05/11 16:58:22 by gmyriah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,15 @@ typedef struct s_data
 	t_phil				*phil;
 }	t_data;
 
-int			init_simulation(t_info *info, int argc, char *argv[]);
-void		*run_philo_actions(void *argv);
-void		*monitor(void *argv);
-void		*monitor_each_must_eat(void *argv);
-int			ft_atoi(const char *nptr);
-int			show_error_message(char *message);
-int			ft_malloc(void *dst, size_t size);
-long long	time_to_ms(struct timeval now);
-void		show_philo_message(t_philo *philo, char *str);
+int					handle_input(int argc, char **argv, t_data *data);
+int					init_data(int **args, t_data *data);
+void				init_all_philos(int **args, t_data *data);
+void				*actions(void *phil);
+int					show_error_message(char *str);
+int					print_status(t_phil *phil, char *str);
+int					set_current_time(long long *time_ms);
+long long			set_time_stamp(t_phil *phil, long long	*time_from_start);
+void				*check_death(void *data);
+
 
 #endif
