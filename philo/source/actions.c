@@ -6,68 +6,119 @@
 /*   By: gmyriah <gmyriah@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/01 09:36:25 by gmyriah           #+#    #+#             */
-/*   Updated: 2022/05/01 09:36:30 by gmyriah          ###   ########.fr       */
+/*   Updated: 2022/05/11 17:01:39 by gmyriah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	pickup_fork(t_philo *philo)
+static int	ft_usleep(int ms)
 {
-	pthread_mutex_lock(philo->right);
-	show_philo_message(philo, "has taken a fork");
-	pthread_mutex_lock(philo->left);
-	show_philo_message(philo, "has taken a fork");
-}
+	long long		start;
+	long long		now;
 
-static void	eating(t_philo *philo)
-{
-	long long	ms;
-
-	pthread_mutex_lock(&philo->check_mutex);
-	gettimeofday(&philo->last_time_to_eat, NULL);
-	ms = time_to_ms(philo->last_time_to_eat) - \
-		time_to_ms(philo->info->create_at);
-	pthread_mutex_lock(&philo->info->finish_mutex);
-	if (!philo->info->finish)
-		printf("%lld\t%d\t %s\n", ms, philo->n + 1, "is eating");
-	philo->num_of_eat += 1;
-	if (philo->num_of_eat == philo->info->num_of_must_eat)
-		philo->info->num_of_eat_finish_philo += 1;
-	pthread_mutex_unlock(&philo->info->finish_mutex);
-	usleep(philo->info->time_to_eat * 1000);
-	pthread_mutex_unlock(philo->right);
-	pthread_mutex_unlock(philo->left);
-	pthread_mutex_unlock(&philo->check_mutex);
-}
-
-static void	sleeping(t_philo *philo)
-{
-	show_philo_message(philo, "is sleeping");
-	usleep(philo->info->time_to_sleep * 1000);
-}
-
-static void	thinking(t_philo *philo)
-{
-	show_philo_message(philo, "is thinking");
-}
-
-void	*run_philo_actions(void *argv)
-{
-	t_philo	*philo;
-
-	philo = argv;
-	if (philo->n % 2 == 0)
-		usleep(philo->info->time_to_eat * 1000);
-	while (!philo->info->finish)
+	if (set_current_time(&start) || set_current_time(&now))
+		return (FAIL);
+	while ((now - start) < (long long)ms)
 	{
-		if (philo->info->num_of_philo > 1)
+		usleep(100);
+		if (set_current_time(&now))
+			return (FAIL);
+	}
+	return (SUCCESS);
+}
+
+int	print_status(t_phil *phil, char *str)
+{
+	long long	time_from_start;
+
+	pthread_mutex_lock(&(phil->ptr_data->mutex_end));
+	pthread_mutex_lock(&(phil->ptr_data->mutex_all_have_eaten));
+	if ((phil->ptr_data->end == -1) && \
+		(phil->ptr_data->all_have_eaten != phil->ptr_data->total_phil))
+	{
+		if (set_time_stamp(phil, &time_from_start))
+			return (1);
+		pthread_mutex_lock(&(phil->ptr_data->mutex_print));
+		printf("%lld %d %s\n", time_from_start, phil->phil_id, str);
+		pthread_mutex_unlock(&(phil->ptr_data->mutex_print));
+	}
+	pthread_mutex_unlock(&(phil->ptr_data->mutex_all_have_eaten));
+	pthread_mutex_unlock(&(phil->ptr_data->mutex_end));
+	return (0);
+}
+
+static int	eating(t_phil *phil, int first_fork, int second_fork)
+{
+	pthread_mutex_lock(&(phil->ptr_data->mutex_forks[first_fork]));
+	if (print_status(phil, "has taken a fork"))
+		return (1);
+	if (phil->ptr_data->total_phil == 1)
+	{
+		pthread_mutex_lock(&(phil->ptr_data->mutex_end));
+		phil->ptr_data->end = 0;
+		pthread_mutex_unlock(&(phil->ptr_data->mutex_end));
+		pthread_mutex_unlock(&(phil->ptr_data->mutex_forks[first_fork]));
+		return (1);
+	}
+	pthread_mutex_lock(&(phil->ptr_data->mutex_forks[second_fork]));
+	if (print_status(phil, "is eating"))
+		return (1);
+	pthread_mutex_lock(&(phil->ptr_data->mutex_time));
+	if (set_current_time(&(phil->last_meal_ms)))
+		return (1);
+	pthread_mutex_unlock(&(phil->ptr_data->mutex_time));
+	phil->num_eat++;
+	if (ft_usleep(phil->time_to_eat))
+		return (1);
+	pthread_mutex_unlock(&(phil->ptr_data->mutex_forks[second_fork]));
+	pthread_mutex_unlock(&(phil->ptr_data->mutex_forks[first_fork]));
+	return (0);
+}
+
+static int	check_and_eat(t_phil *phil)
+{
+	if (eating(phil, phil->right_fork_id, phil->left_fork_id))
+		return (1);
+	if (phil->num_eat == phil->ptr_data->total_eat)
+	{
+		pthread_mutex_lock(&(phil->ptr_data->mutex_all_have_eaten));
+		phil->ptr_data->all_have_eaten++;
+		if (phil->ptr_data->all_have_eaten == phil->ptr_data->total_phil)
 		{
-			pickup_fork(philo);
-			eating(philo);
-			sleeping(philo);
-			thinking(philo);
+			pthread_mutex_unlock(&(phil->ptr_data->mutex_all_have_eaten));
+			return (1);
+		}
+		pthread_mutex_unlock(&(phil->ptr_data->mutex_all_have_eaten));
+	}
+	return (0);
+}
+
+void	*actions(void *phil)
+{
+	t_phil	*phil_tmp;
+
+	phil_tmp = &(*(t_phil *)phil);
+	if (phil_tmp->phil_id % 2 == 0)
+		usleep(100);
+	while (1)
+	{		
+		pthread_mutex_lock(&(phil_tmp->ptr_data->mutex_end));
+		if (phil_tmp->ptr_data->end)
+		{
+			pthread_mutex_unlock(&(phil_tmp->ptr_data->mutex_end));
+			if (check_and_eat(phil_tmp))
+				return (NULL);
+			if (print_status(phil, "is sleeping"))
+				return (NULL);
+			if (ft_usleep(phil_tmp->time_to_sleep) || \
+                print_status(phil, "is thinking"))
+				return (NULL);
+		}
+		else
+		{
+			pthread_mutex_unlock(&(phil_tmp->ptr_data->mutex_end));
+			return (NULL);
 		}
 	}
-	return (NULL);
 }
