@@ -6,7 +6,7 @@
 /*   By: gmyriah <gmyriah@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/01 09:36:19 by gmyriah           #+#    #+#             */
-/*   Updated: 2022/05/11 16:58:22 by gmyriah          ###   ########.fr       */
+/*   Updated: 2022/05/11 18:44:13 by gmyriah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,5 @@ int					print_status(t_phil *phil, char *str);
 int					set_current_time(long long *time_ms);
 long long			set_time_stamp(t_phil *phil, long long	*time_from_start);
 void				*check_death(void *data);
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: gmyriah <gmyriah@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/01 09:36:25 by gmyriah           #+#    #+#             */
-/*   Updated: 2022/05/11 17:01:39 by gmyriah          ###   ########.fr       */
+/*   Updated: 2022/05/11 18:43:56 by gmyriah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	*actions(void *phil)
 			if (print_status(phil, "is sleeping"))
 				return (NULL);
 			if (ft_usleep(phil_tmp->time_to_sleep) || \
-                print_status(phil, "is thinking"))
+				print_status(phil, "is thinking"))
 				return (NULL);
 		}
 		else

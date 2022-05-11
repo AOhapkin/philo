@@ -6,7 +6,7 @@
 /*   By: gmyriah <gmyriah@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/01 09:36:38 by gmyriah           #+#    #+#             */
-/*   Updated: 2022/05/11 17:00:57 by gmyriah          ###   ########.fr       */
+/*   Updated: 2022/05/11 18:43:33 by gmyriah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	init_threads(t_data *data, pthread_t **philos, pthread_t *monitor)
 	i = 0;
 	while (i < data->total_phil)
 	{
-		if (pthread_create(*(philos) + i, NULL, &actions, &(data->phil[i])) != 0)
+		if (pthread_create(*(philos) + i, NULL, &actions, &(data->phil[i])))
 			return (show_error_message("pthread_create fail\n"));
 		i++;
 	}
